@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>单页应用</title>
+		<script src="js/jq/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jq/jq.uriAnchor.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.page{
+				display: none;
+				border:1px solid #e2e2e2;
+				width:400px;
+				height:300px;
+			}
+		</style>
+	</head>
+	<body>
+		<button onclick="to('pre')" ><--pre</button>
+		<button  onclick="to('next')" >next--></button>
+		<div class="page">
+			i am page 1
+		</div>
+		<div class="page">
+			i am page 2
+		</div>
+	</body>
+	<script type="text/javascript">
+		var anchor_schema_map={
+			page:1,
+			_page:{
+			}
+		},
+		changeAnchorPart,onHashchange,to;
+		
+		function to(type){
+			
+			var anchor_map_proposed = $.uriAnchor.makeAnchorMap();
+			var page = anchor_map_proposed.page||0;
+			console.log(page)
+			type === 'next'?page++:page--;
+			console.log(page)
+			page<0?page=0:page;
+			changeAnchorPart({page:page});
+			return false;
+		}
+		
+		changeAnchorPart = function(arg_map){
+			$.uriAnchor.setAnchor(arg_map);
+		}
+		onHashchange  = function(e){
+			var anchor_map_proposed = $.uriAnchor.makeAnchorMap();
+			console.log(anchor_map_proposed);
+			$(".page").hide();
+			$(".page").eq(anchor_map_proposed.page).show();
+		}
+		
+		$.uriAnchor.configModule({
+			schema_map:anchor_schema_map
+		});
+
+		
+		window.addEventListener("hashchange",onHashchange);
+		
+	</script>
+</html>
