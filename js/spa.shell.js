@@ -9,6 +9,10 @@
  *  4）开发人员可传入回调函数，在滑块动画结束时调用
  *  5）创建测试代码，以便确保滑块功能正常
  * 
+ * 3.管理应用状态
+ *  1）支持浏览器历史控件
+ *  2）应用表现良好
+ *  uri变化触发界面变化
  */
 spa.shell = (function(){
 	var 
@@ -20,16 +24,20 @@ spa.shell = (function(){
 		chat_extend_height:450,
 		chat_retract_height:15,
 		chat_extend_title:'click to retract',
-		chat_retract_title:'click to extend'
+		chat_retract_title:'click to extend',
+		anchor_schema_map:{
+			chat:{open:true,closed:true}
+		}
 	},
 /*	动态配置*/
 	stateMap = {
 		$container:null,
-		is_chat_retract:true
+		is_chat_retract:true,
+		anchor_map:{}
 	},
 /*	jquery Dom 对象*/
 	jqueryMap = {},
-	setJqueryMap ,toggleChat,onClickChat, initModule;
+	setJqueryMap,copyAnchorMap,toggleChat,changeAnchorPart,onHashChange,onClickChat, initModule;
 	
 	setJqueryMap = function(){
 		var $container = stateMap.$container;
@@ -37,6 +45,9 @@ spa.shell = (function(){
 			$container:$container,
 			$chat:$container.find(".spa-shell-chat")
 		}
+	};
+	copyAnchorMap = function(){
+		return $.extend(true, {}, stateMap.anchor_map);
 	};
 	toggleChat = function(do_extend,cb){
 		var $chat = jqueryMap.$chat,
@@ -72,9 +83,84 @@ spa.shell = (function(){
 		return true;
 		
 	};
+	changeAnchorPart = function(arg_map){
+	var 
+			anchor_map_previous = copyAnchorMap(),
+			bool_return = true;
+/*				anchor_map_revise = $.extend(true, {}, arg_map);
+			bool_return = true,
+			key_name , key_name_dep;
+		KEYVAL:	
+		for(key_name in arg_map){
+			if(arg_map.hasOwnProperty(key_name)){
+				
+				if(key_name.indexOf("_") == 0) {
+					continue KEYVAL;
+				}
+				
+				if(anchor_map_previous.hasOwnProperty(key_name)){
+					key_name_dep = "_"+key_name;
+					if(arg_map[key_name_dep]){
+						
+					}
+				}
+				
+			}
+		}*/
+		
+		try{
+			$.uriAnchor.setAnchor(arg_map);
+		}catch(e){
+			$.uriAnchor.setAnchor(anchor_map_previous);
+			bool_return = false;
+		}
+		return bool_return;
+	};
 	onClickChat = function(e){
-		console.log(stateMap.is_chat_retract)
+/*		console.log(stateMap.is_chat_retract)
 		toggleChat(stateMap.is_chat_retract);
+*/		
+		changeAnchorPart({
+			chat:stateMap.is_chat_retract?'open':'closed'
+		});
+		
+		return false;
+	};
+	onHashChange = function(e){
+		var anchor_map_previous = copyAnchorMap(),
+			anchor_map_proposed,
+			_s_chat_previous,_s_chat_proposed,
+			s_chat_proposed;
+			
+		try{
+			anchor_map_proposed = $.uriAnchor.makeAnchorMap();
+		}catch(e){
+			$.uriAnchor.setAnchor(anchor_map_previous,null,null);
+			return false;
+		}
+		
+		stateMap.anchor_map = anchor_map_proposed;
+		
+		_s_chat_previous = anchor_map_previous._s_chat;
+		_s_chat_proposed = anchor_map_proposed._s_chat;
+		
+		if(!anchor_map_previous || _s_chat_previous !== _s_chat_proposed){
+			s_chat_proposed = anchor_map_proposed.chat;
+			switch(s_chat_proposed){
+				case 'open':
+				    toggleChat(true);
+				    break;
+				case 'closed':
+					toggleChat(false);
+					break;
+				default:
+					toggleChat(false);
+					delete anchor_map_proposed.chat;
+					$.uriAnchor.setAnchor(anchor_map_proposed,null,null);
+					break;
+			}
+		}
+		
 		return false;
 	};
 	initModule = function($container){
@@ -86,7 +172,13 @@ spa.shell = (function(){
 		stateMap.is_chat_retract = true;
 		jqueryMap.$chat.attr("title",configMap.chat_retract_title)
 			.on("click",onClickChat);
-			
+		
+		$.uriAnchor.configModule({
+			schema_map:configMap.anchor_schema_map
+		});
+		
+		$(window).on("hashchange",onHashChange).trigger("hashchange");
+		
 /*		setTimeout(function(){
 			toggleChat(true);
 		},2000);
