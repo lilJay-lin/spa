@@ -1,0 +1,115 @@
+
+.spa-chat{
+    position: absolute;
+    bottom:0;
+    right:0;
+    width:25rem;
+    height:2rem;
+    background:#fff;
+    border-radius:0.3rem 0 0 0;
+    border-style:solid;
+    border-width:thin 0 0 thin;
+    border-color:#888;
+    box-shadow: 0 0 0.75rem 0 #888;
+    z-index:1;
+}
+.spa-chat-head,.spa-chat-closer{
+    position:absolute;
+    top:0;
+    height:2rem;
+    line-height:1.8rem;
+    border-bottom:thin solid #888;
+    cursor:pointer;
+    background:#888;
+    color:white;
+    font-weight:800;
+    text-align:center;
+}
+.spa-chat-head{
+    left:0;
+    right:2rem;
+    border-radius:0.3rem 0 0 0;
+}
+.spa-chat-closer{
+    right:0;
+    width:2rem;
+}
+.spa-chat-closer:hover{
+    background:#800;
+}
+.spa-chat-head-toggle{
+    position:absolute;
+    top:0;
+    left:0;
+    width:2rem;
+    bottom:0;
+    border-radius:0.3rem 0 0 0;
+}
+
+.spa-chat-head-title{
+    position:absolute;
+    left:50%;
+    width:16rem;
+    margin-left:-8rem;
+}
+
+.spa-chat-sizer{
+    position:absolute;
+    top:2rem;
+    left:0;
+    right:0;
+    border:thin solid #888;
+    box-shadow: 0 0 0.75rem 0 #888;
+}
+.spa-chat-msgs{
+    position:absolute;
+    top:1rem;
+    left:1rem;
+    right:1rem;
+    bottom:4rem;
+    padding:0.5rem;
+    border:thin solid #888;
+    overflow-y:scroll;
+}
+
+.spa-chat-box{
+    position:absolute;
+    height:2rem;
+    left:1rem;
+    right:1rem;
+    bottom:1rem;
+    border:thin solid #888;
+    background:#888;
+}
+.spa-chat-box input[type=text]{
+    float:left;
+    width:75%;
+    height:100%;
+    padding:0;
+    border:0;
+    outline:0;
+    background:#ddd;
+    color:#404040;
+}
+.spa-chat-box input[type=text]:focus{
+    background:#fff;
+}
+.spa-chat-box div{
+    float:left;
+    width:25%;
+    height:2rem;
+    line-height:1.9rem;
+    text-align:center;
+    color:#fff;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.spa-chat-box div:hover{
+    background-color:#444;
+    color:#ff0;
+}
+.spa-chat-head:hover .spa-chat-head-toggle{
+    background:#aaa;
+}
+
