@@ -42,3 +42,9 @@ Network Trash Folder
 Temporary Items
 .apdisk
 .project
+.idea/.name
+.idea/workspace.xml
+.idea/vcs.xml
+.idea/spa.iml
+.idea/modules.xml
+.idea/misc.xml

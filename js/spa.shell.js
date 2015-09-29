@@ -15,41 +15,33 @@
  *  uri变化触发界面变化
  */
 spa.shell = (function(){
-	var 
-/*	静态配置*/
-	configMap = {
-		main_html:String()+ '<div class="spa-shell-head"><div class="spa-shell-head-logo"></div><div class="spa-shell-head-acct"></div><div class="spa-shell-head-search"></div></div><div class="spa-shell-main"><div class="spa-shell-main-nav"></div><div class="spa-shell-main-cnt"></div></div><div class="spa-shell-foot"></div><div class="spa-shell-chat"></div><div class="spa-shell-modal"></div>',
-		chat_extend_time:1000,
-		chat_retract_time:300,
-		chat_extend_height:450,
-		chat_retract_height:15,
-		chat_extend_title:'click to retract',
-		chat_retract_title:'click to extend',
-		anchor_schema_map:{
-			chat:{open:true,closed:true}
-		}
-	},
-/*	动态配置*/
-	stateMap = {
-		$container:null,
-		is_chat_retract:true,
-		anchor_map:{}
-	},
-/*	jquery Dom 对象*/
-	jqueryMap = {},
-	setJqueryMap,copyAnchorMap,toggleChat,changeAnchorPart,onHashChange,onClickChat, initModule;
-	
-	setJqueryMap = function(){
-		var $container = stateMap.$container;
-		jqueryMap = {
-			$container:$container,
-			$chat:$container.find(".spa-shell-chat")
-		}
-	};
+	var
+	/*	静态配置*/
+		configMap = {
+			main_html:String()+ '<div class="spa-shell-head"><div class="spa-shell-head-logo"></div><div class="spa-shell-head-acct"></div><div class="spa-shell-head-search"></div></div><div class="spa-shell-main"><div class="spa-shell-main-nav"></div><div class="spa-shell-main-cnt"></div></div><div class="spa-shell-foot"></div><div class="spa-shell-modal"></div>',
+			/*	chat_extend_time:1000,
+			 chat_retract_time:300,
+			 chat_extend_height:450,
+			 chat_retract_height:15,
+			 chat_extend_title:'click to retract',
+			 chat_retract_title:'click to extend'*/ //移到chat模块
+			anchor_schema_map:{
+				chat:{open:true,closed:true}
+			}
+		},
+	/*	动态配置*/
+		stateMap = {
+			$container:null,
+			anchor_map:{}
+		},
+	/*	jquery Dom 对象*/
+		jqueryMap = {},
+		setJqueryMap ,/*toggleChat,*/onClickChat,onHashChange, initModule,copyAnchorMap;
+
 	copyAnchorMap = function(){
 		return $.extend(true, {}, stateMap.anchor_map);
 	};
-	toggleChat = function(do_extend,cb){
+	/*toggleChat = function(do_extend,cb){
 		var $chat = jqueryMap.$chat,
 			px_chat_height = $chat.height(),
 			is_open = configMap.chat_extend_height === px_chat_height,
@@ -82,7 +74,7 @@ spa.shell = (function(){
 		
 		return true;
 		
-	};
+	};*/
 	changeAnchorPart = function(arg_map){
 	var 
 			anchor_map_previous = copyAnchorMap(),
@@ -116,16 +108,13 @@ spa.shell = (function(){
 		}
 		return bool_return;
 	};
-	onClickChat = function(e){
-/*		console.log(stateMap.is_chat_retract)
-		toggleChat(stateMap.is_chat_retract);
-*/		
+/*	onClickChat = function(e){
 		changeAnchorPart({
 			chat:stateMap.is_chat_retract?'open':'closed'
 		});
 		
 		return false;
-	};
+	};*/
 	onHashChange = function(e){
 		var anchor_map_previous = copyAnchorMap(),
 			anchor_map_proposed,
@@ -165,28 +154,32 @@ spa.shell = (function(){
 	};
 	initModule = function($container){
 		stateMap.$container = $container;
+
 		$container.html(configMap.main_html);
+
 		setJqueryMap();
-		
-/*		添加点击事件*/
-		stateMap.is_chat_retract = true;
-		jqueryMap.$chat.attr("title",configMap.chat_retract_title)
-			.on("click",onClickChat);
+
+		spa.chat.initModule($container);
 		
 		$.uriAnchor.configModule({
 			schema_map:configMap.anchor_schema_map
 		});
 		
 		$(window).on("hashchange",onHashChange).trigger("hashchange");
-		
-/*		setTimeout(function(){
-			toggleChat(true);
-		},2000);
-		
-		setTimeout(function(){
-			toggleChat(false)
-		},4000)*/
+
+		/*		添加点击事件*/
+		/*		stateMap.is_chat_retract = true;
+		 jqueryMap.$chat.attr("title",configMap.chat_retract_title)
+		 .on("click",onClickChat);*/ //移到chat模块
+
+		/*		setTimeout(function(){
+		 toggleChat(true);
+		 },2000);
+
+		 setTimeout(function(){
+		 toggleChat(false)
+		 },4000)*/
 	};
-	
+
 	return {initModule:initModule};
 })();
