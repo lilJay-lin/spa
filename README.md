@@ -1,7 +1,9 @@
 ####
 #单页web应用：javascript 从前端到后端 随书练习
 [git项目](https://github.com/lilJay-lin/spa.git)
+
 ***
+
 #目录结构和开发规范
 
 	spa
@@ -19,6 +21,7 @@
 
 #开发shell
 >**shell** 负责应用级的任务，像URI路由管理和应用布局
+
 ##shell负责以下功能
 1.渲染和管理功能容器
 2.管理应用状态
